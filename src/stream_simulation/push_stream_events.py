@@ -24,11 +24,19 @@ Notes for F2 capacity:
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
 
 from azure.eventhub import EventHubProducerClient, EventData
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()  # reads .env in the current directory, if present
+except ImportError:
+    pass  # dotenv is optional; --conn-str/--eventhub-name flags still work without it
 
 
 def load_events(path: Path):
@@ -90,10 +98,14 @@ def main():
         description="Replay JSONL events into a Fabric Eventstream."
     )
     parser.add_argument(
-        "--conn-str", required=True, help="Eventstream Custom App connection string"
+        "--conn-str",
+        default=os.environ.get("EVENTSTREAM_CONN_STR"),
+        help="Eventstream Custom App connection string (defaults to .env EVENTSTREAM_CONN_STR)",
     )
     parser.add_argument(
-        "--eventhub-name", required=True, help="Eventstream Custom App event hub name"
+        "--eventhub-name",
+        default=os.environ.get("EVENTSTREAM_EVENTHUB_NAME"),
+        help="Eventstream Custom App event hub name (defaults to .env EVENTSTREAM_EVENTHUB_NAME)",
     )
     parser.add_argument(
         "--file", default="output/orders_stream_events.jsonl", help="Path to JSONL file"
@@ -108,6 +120,13 @@ def main():
         "--batch-size", type=int, default=10, help="Events per network send"
     )
     args = parser.parse_args()
+
+    if not args.conn_str or not args.eventhub_name:
+        print(
+            "Missing connection details. Either set EVENTSTREAM_CONN_STR and "
+            "EVENTSTREAM_EVENTHUB_NAME in a .env file, or pass --conn-str/--eventhub-name."
+        )
+        sys.exit(1)
 
     events = load_events(Path(args.file))
     print(f"Loaded {len(events)} events from {args.file}")

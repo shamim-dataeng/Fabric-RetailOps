@@ -10,7 +10,7 @@
     "load_type": "full"
   },
   {
-    "file_name": "orders_batch_*.csv",
+    "file_name": "orders_batch_20260717.csv",
     "destination_table": "bronze_orders_batch",
     "load_type": "incremental"
   }

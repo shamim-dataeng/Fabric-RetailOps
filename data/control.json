@@ -1,0 +1,17 @@
+[
+  {
+    "file_name": "customers.csv",
+    "destination_table": "dim_customers",
+    "load_type": "full"
+  },
+  {
+    "file_name": "products.csv",
+    "destination_table": "dim_products",
+    "load_type": "full"
+  },
+  {
+    "file_name": "orders_batch_*.csv",
+    "destination_table": "bronze_orders_batch",
+    "load_type": "incremental"
+  }
+]

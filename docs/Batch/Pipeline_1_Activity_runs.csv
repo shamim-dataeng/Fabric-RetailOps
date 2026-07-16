@@ -1,0 +1,441 @@
+"Activity name","Activity status","Error","Run start","Duration","Input","Output"
+"Lookup1","Succeeded","","7/16/2026, 3:05:22 PM","10s","{
+    ""source"": {
+        ""type"": ""JsonSource"",
+        ""storeSettings"": {
+            ""type"": ""LakehouseReadSettings"",
+            ""recursive"": false,
+            ""enablePartitionDiscovery"": false
+        },
+        ""formatSettings"": {
+            ""type"": ""JsonReadSettings""
+        }
+    },
+    ""firstRowOnly"": false,
+    ""datasetSettings"": {
+        ""annotations"": [],
+        ""linkedService"": {
+            ""name"": ""Lakehouse_1"",
+            ""properties"": {
+                ""annotations"": [],
+                ""type"": ""Lakehouse"",
+                ""typeProperties"": {
+                    ""workspaceId"": ""43eb80b1-0bfb-4e41-a94b-7dc907e9a101"",
+                    ""artifactId"": ""cddb81d8-9172-4fd3-a0a5-4734d9f7f21c"",
+                    ""rootFolder"": ""Files""
+                }
+            }
+        },
+        ""type"": ""Json"",
+        ""typeProperties"": {
+            ""location"": {
+                ""type"": ""LakehouseLocation"",
+                ""fileName"": ""control.json""
+            }
+        },
+        ""schema"": {}
+    }
+}","{
+    ""count"": 3,
+    ""value"": [
+        {
+            ""file_name"": ""customers.csv"",
+            ""destination_table"": ""dim_customers"",
+            ""load_type"": ""full""
+        },
+        {
+            ""file_name"": ""products.csv"",
+            ""destination_table"": ""dim_products"",
+            ""load_type"": ""full""
+        },
+        {
+            ""file_name"": ""orders_batch_20260716.csv"",
+            ""destination_table"": ""bronze_orders_batch"",
+            ""load_type"": ""incremental""
+        }
+    ]
+}"
+"ForEach1","Succeeded","","7/16/2026, 3:05:33 PM","1m 7s","{
+    ""ItemsCount"": ""3""
+}","{}"
+"If Condition1","Succeeded","","7/16/2026, 3:05:34 PM","22s","{}","{}"
+"Copy data1","Succeeded","","7/16/2026, 3:05:34 PM","20s","{
+    ""source"": {
+        ""type"": ""DelimitedTextSource"",
+        ""storeSettings"": {
+            ""type"": ""HttpReadSettings"",
+            ""requestMethod"": ""GET""
+        },
+        ""formatSettings"": {
+            ""type"": ""DelimitedTextReadSettings""
+        },
+        ""datasetSettings"": {
+            ""annotations"": [],
+            ""type"": ""DelimitedText"",
+            ""typeProperties"": {
+                ""location"": {
+                    ""type"": ""HttpServerLocation"",
+                    ""relativeUrl"": ""customers.csv""
+                },
+                ""columnDelimiter"": "","",
+                ""escapeChar"": ""\\"",
+                ""firstRowAsHeader"": true,
+                ""quoteChar"": ""\""""
+            },
+            ""schema"": [],
+            ""externalReferences"": {
+                ""connection"": ""2f696094-e05d-427c-943e-e6cd14300c4f""
+            }
+        }
+    },
+    ""sink"": {
+        ""type"": ""LakehouseTableSink"",
+        ""tableActionOption"": ""OverwriteSchema"",
+        ""partitionOption"": ""None"",
+        ""applyVOrder"": false,
+        ""datasetSettings"": {
+            ""annotations"": [],
+            ""linkedService"": {
+                ""name"": ""Lakehouse_1"",
+                ""properties"": {
+                    ""annotations"": [],
+                    ""type"": ""Lakehouse"",
+                    ""typeProperties"": {
+                        ""workspaceId"": ""43eb80b1-0bfb-4e41-a94b-7dc907e9a101"",
+                        ""artifactId"": ""cddb81d8-9172-4fd3-a0a5-4734d9f7f21c"",
+                        ""rootFolder"": ""Tables""
+                    }
+                }
+            },
+            ""type"": ""LakehouseTable"",
+            ""schema"": [],
+            ""typeProperties"": {
+                ""schema"": ""bronze"",
+                ""table"": ""dim_customers""
+            }
+        }
+    },
+    ""enableStaging"": false,
+    ""translator"": {
+        ""type"": ""TabularTranslator"",
+        ""typeConversion"": true,
+        ""typeConversionSettings"": {
+            ""allowDataTruncation"": true,
+            ""treatBooleanAsNumber"": false
+        }
+    }
+}","{
+    ""dataRead"": 16449,
+    ""dataWritten"": 14462,
+    ""filesRead"": 1,
+    ""filesWritten"": 1,
+    ""sourcePeakConnections"": 2,
+    ""sinkPeakConnections"": 1,
+    ""rowsRead"": 200,
+    ""rowsCopied"": 200,
+    ""copyDuration"": 11,
+    ""throughput"": 2.35,
+    ""errors"": [],
+    ""usedDataIntegrationUnits"": 4,
+    ""usedParallelCopies"": 1,
+    ""executionDetails"": [
+        {
+            ""source"": {
+                ""type"": ""HttpServer""
+            },
+            ""sink"": {
+                ""type"": ""Lakehouse""
+            },
+            ""status"": ""Succeeded"",
+            ""start"": ""7/16/2026, 3:05:36 PM"",
+            ""duration"": 11,
+            ""usedDataIntegrationUnits"": 4,
+            ""usedParallelCopies"": 1,
+            ""profile"": {
+                ""queue"": {
+                    ""status"": ""Completed"",
+                    ""duration"": 4
+                },
+                ""transfer"": {
+                    ""status"": ""Completed"",
+                    ""duration"": 7,
+                    ""details"": {
+                        ""listingSource"": {
+                            ""type"": ""HttpServer"",
+                            ""workingDuration"": 0
+                        },
+                        ""readingFromSource"": {
+                            ""type"": ""HttpServer"",
+                            ""workingDuration"": 0
+                        },
+                        ""writingToSink"": {
+                            ""type"": ""Lakehouse"",
+                            ""workingDuration"": 0
+                        }
+                    }
+                }
+            },
+            ""detailedDurations"": {
+                ""queuingDuration"": 4,
+                ""transferDuration"": 7
+            }
+        }
+    ],
+    ""dataConsistencyVerification"": {
+        ""VerificationResult"": ""Unsupported""
+    }
+}"
+"If Condition1","Succeeded","","7/16/2026, 3:05:57 PM","20s","{}","{}"
+"Copy data1","Succeeded","","7/16/2026, 3:05:57 PM","17s","{
+    ""source"": {
+        ""type"": ""DelimitedTextSource"",
+        ""storeSettings"": {
+            ""type"": ""HttpReadSettings"",
+            ""requestMethod"": ""GET""
+        },
+        ""formatSettings"": {
+            ""type"": ""DelimitedTextReadSettings""
+        },
+        ""datasetSettings"": {
+            ""annotations"": [],
+            ""type"": ""DelimitedText"",
+            ""typeProperties"": {
+                ""location"": {
+                    ""type"": ""HttpServerLocation"",
+                    ""relativeUrl"": ""products.csv""
+                },
+                ""columnDelimiter"": "","",
+                ""escapeChar"": ""\\"",
+                ""firstRowAsHeader"": true,
+                ""quoteChar"": ""\""""
+            },
+            ""schema"": [],
+            ""externalReferences"": {
+                ""connection"": ""2f696094-e05d-427c-943e-e6cd14300c4f""
+            }
+        }
+    },
+    ""sink"": {
+        ""type"": ""LakehouseTableSink"",
+        ""tableActionOption"": ""OverwriteSchema"",
+        ""partitionOption"": ""None"",
+        ""applyVOrder"": false,
+        ""datasetSettings"": {
+            ""annotations"": [],
+            ""linkedService"": {
+                ""name"": ""Lakehouse_1"",
+                ""properties"": {
+                    ""annotations"": [],
+                    ""type"": ""Lakehouse"",
+                    ""typeProperties"": {
+                        ""workspaceId"": ""43eb80b1-0bfb-4e41-a94b-7dc907e9a101"",
+                        ""artifactId"": ""cddb81d8-9172-4fd3-a0a5-4734d9f7f21c"",
+                        ""rootFolder"": ""Tables""
+                    }
+                }
+            },
+            ""type"": ""LakehouseTable"",
+            ""schema"": [],
+            ""typeProperties"": {
+                ""schema"": ""bronze"",
+                ""table"": ""dim_products""
+            }
+        }
+    },
+    ""enableStaging"": false,
+    ""translator"": {
+        ""type"": ""TabularTranslator"",
+        ""typeConversion"": true,
+        ""typeConversionSettings"": {
+            ""allowDataTruncation"": true,
+            ""treatBooleanAsNumber"": false
+        }
+    }
+}","{
+    ""dataRead"": 3625,
+    ""dataWritten"": 4364,
+    ""filesRead"": 1,
+    ""filesWritten"": 1,
+    ""sourcePeakConnections"": 2,
+    ""sinkPeakConnections"": 1,
+    ""rowsRead"": 60,
+    ""rowsCopied"": 60,
+    ""copyDuration"": 12,
+    ""throughput"": 0.518,
+    ""errors"": [],
+    ""usedDataIntegrationUnits"": 4,
+    ""usedParallelCopies"": 1,
+    ""executionDetails"": [
+        {
+            ""source"": {
+                ""type"": ""HttpServer""
+            },
+            ""sink"": {
+                ""type"": ""Lakehouse""
+            },
+            ""status"": ""Succeeded"",
+            ""start"": ""7/16/2026, 3:06:00 PM"",
+            ""duration"": 12,
+            ""usedDataIntegrationUnits"": 4,
+            ""usedParallelCopies"": 1,
+            ""profile"": {
+                ""queue"": {
+                    ""status"": ""Completed"",
+                    ""duration"": 4
+                },
+                ""transfer"": {
+                    ""status"": ""Completed"",
+                    ""duration"": 7,
+                    ""details"": {
+                        ""listingSource"": {
+                            ""type"": ""HttpServer"",
+                            ""workingDuration"": 0
+                        },
+                        ""readingFromSource"": {
+                            ""type"": ""HttpServer"",
+                            ""workingDuration"": 0
+                        },
+                        ""writingToSink"": {
+                            ""type"": ""Lakehouse"",
+                            ""workingDuration"": 0
+                        }
+                    }
+                }
+            },
+            ""detailedDurations"": {
+                ""queuingDuration"": 4,
+                ""transferDuration"": 7
+            }
+        }
+    ],
+    ""dataConsistencyVerification"": {
+        ""VerificationResult"": ""Unsupported""
+    }
+}"
+"If Condition1","Succeeded","","7/16/2026, 3:06:17 PM","21s","{}","{}"
+"Copy data2","Succeeded","","7/16/2026, 3:06:18 PM","19s","{
+    ""source"": {
+        ""type"": ""DelimitedTextSource"",
+        ""storeSettings"": {
+            ""type"": ""HttpReadSettings"",
+            ""requestMethod"": ""GET""
+        },
+        ""formatSettings"": {
+            ""type"": ""DelimitedTextReadSettings""
+        },
+        ""datasetSettings"": {
+            ""annotations"": [],
+            ""type"": ""DelimitedText"",
+            ""typeProperties"": {
+                ""location"": {
+                    ""type"": ""HttpServerLocation"",
+                    ""relativeUrl"": ""orders_batch_20260716.csv""
+                },
+                ""columnDelimiter"": "","",
+                ""escapeChar"": ""\\"",
+                ""firstRowAsHeader"": true,
+                ""quoteChar"": ""\""""
+            },
+            ""schema"": [],
+            ""externalReferences"": {
+                ""connection"": ""2f696094-e05d-427c-943e-e6cd14300c4f""
+            }
+        }
+    },
+    ""sink"": {
+        ""type"": ""LakehouseTableSink"",
+        ""tableActionOption"": ""Append"",
+        ""partitionOption"": ""None"",
+        ""applyVOrder"": false,
+        ""datasetSettings"": {
+            ""annotations"": [],
+            ""linkedService"": {
+                ""name"": ""Lakehouse_1"",
+                ""properties"": {
+                    ""annotations"": [],
+                    ""type"": ""Lakehouse"",
+                    ""typeProperties"": {
+                        ""workspaceId"": ""43eb80b1-0bfb-4e41-a94b-7dc907e9a101"",
+                        ""artifactId"": ""cddb81d8-9172-4fd3-a0a5-4734d9f7f21c"",
+                        ""rootFolder"": ""Tables""
+                    }
+                }
+            },
+            ""type"": ""LakehouseTable"",
+            ""schema"": [],
+            ""typeProperties"": {
+                ""schema"": ""bronze"",
+                ""table"": ""bronze_orders_batch""
+            }
+        }
+    },
+    ""enableStaging"": false,
+    ""translator"": {
+        ""type"": ""TabularTranslator"",
+        ""typeConversion"": true,
+        ""typeConversionSettings"": {
+            ""allowDataTruncation"": true,
+            ""treatBooleanAsNumber"": false
+        }
+    }
+}","{
+    ""dataRead"": 47971,
+    ""dataWritten"": 17662,
+    ""filesRead"": 1,
+    ""filesWritten"": 1,
+    ""sourcePeakConnections"": 2,
+    ""sinkPeakConnections"": 1,
+    ""rowsRead"": 419,
+    ""rowsCopied"": 419,
+    ""copyDuration"": 13,
+    ""throughput"": 5.996,
+    ""errors"": [],
+    ""usedDataIntegrationUnits"": 4,
+    ""usedParallelCopies"": 1,
+    ""executionDetails"": [
+        {
+            ""source"": {
+                ""type"": ""HttpServer""
+            },
+            ""sink"": {
+                ""type"": ""Lakehouse""
+            },
+            ""status"": ""Succeeded"",
+            ""start"": ""7/16/2026, 3:06:21 PM"",
+            ""duration"": 13,
+            ""usedDataIntegrationUnits"": 4,
+            ""usedParallelCopies"": 1,
+            ""profile"": {
+                ""queue"": {
+                    ""status"": ""Completed"",
+                    ""duration"": 4
+                },
+                ""transfer"": {
+                    ""status"": ""Completed"",
+                    ""duration"": 8,
+                    ""details"": {
+                        ""listingSource"": {
+                            ""type"": ""HttpServer"",
+                            ""workingDuration"": 0
+                        },
+                        ""readingFromSource"": {
+                            ""type"": ""HttpServer"",
+                            ""workingDuration"": 0
+                        },
+                        ""writingToSink"": {
+                            ""type"": ""Lakehouse"",
+                            ""workingDuration"": 0
+                        }
+                    }
+                }
+            },
+            ""detailedDurations"": {
+                ""queuingDuration"": 4,
+                ""transferDuration"": 8
+            }
+        }
+    ],
+    ""dataConsistencyVerification"": {
+        ""VerificationResult"": ""Unsupported""
+    }
+}"
